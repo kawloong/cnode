@@ -1,0 +1,13 @@
+2016-09-07 02:16:30.924[INFO ][17120/dfc32720][main.cpp] LOGINIT| result=0| file=./logs/cnodeconnect.log
+2016-09-07 02:16:30.924[INFO ][17120/dfc32720][main.cpp] PROGRAM_END| msg=CNodeConnect exit(0)
+2016-09-07 02:16:42.004[INFO ][17122/fdcce720][main.cpp] LOGINIT| result=0| file=./logs/cnodeconnect.log
+2016-09-07 02:16:42.004[INFO ][17122/fdcce720][main.cpp] PROGRAM_END| msg=CNodeConnect exit(0)
+2016-09-07 04:24:11.947[INFO ][17582/5e3db720][main.cpp] LOGINIT| result=0| file=./logs/cnodeconnect.log
+2016-09-07 04:24:11.947[INFO ][17582/5e3db720][main.cpp] PROGRAM_END| msg=CNodeConnect exit(0)
+2016-09-07 04:24:30.842[INFO ][17583/4e680e0][main.cpp] LOGINIT| result=0| file=./logs/cnodeconnect.log
+2016-09-07 04:24:30.880[INFO ][17583/4e680e0][main.cpp] PROGRAM_END| msg=CNodeConnect exit(0)
+2016-09-07 22:48:04.707[INFO ][18107/427be720][main.cpp] LOGINIT| result=0| file=./logs/cnodeconnect.log
+2016-09-07 22:48:04.707[INFO ][18107/427be720][main.cpp] PROGRAM_END| msg=CNodeConnect exit(0)
+2016-09-07 22:52:59.836[INFO ][18129/84159720][main.cpp] LOGINIT| result=0| file=./logs/cnodeconnect.log
+2016-09-07 22:57:52.931[INFO ][18149/9627e720][main.cpp] LOGINIT| result=0| file=./logs/cnodeconnect.log
+2016-09-07 23:25:57.019[INFO ][18234/5e220720][main.cpp] LOGINIT| result=0| file=./logs/cnodeconnect.log

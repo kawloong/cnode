@@ -1,0 +1,21 @@
+
+
+enum 
+{
+    ERR_BASE = 100,
+    ERR_SERVER_LISTEN,
+    ERR_SERVER_EVNEW,
+    ERR_SERVER_ACCEPT,
+    ERR_SERVER_PIPE,
+
+    ERR_DEAL_BASE = 500,
+    ERR_PARAMETER, // 请求参数有误或缺失
+    ERR_HEADER,
+    ERR_ENCODING,
+    ERR_JSON_FORMAT,
+    ERR_SYSTEM,
+    ERR_MD5INVALID, // MD5不合法
+    ERR_REDIS,
+
+    ERR_SYSBUG, // 存在程序逻辑错误
+};
