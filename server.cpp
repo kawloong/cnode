@@ -12,9 +12,11 @@
 #include "comm/bmsh_config.h"
 #include "comm/taskpool.h"
 #include "redis/redispooladmin.h"
+#include "mongo/mongopooladmin.h"
 #include "dealbase.h"
 #include "deal_auth.h"
 #include "deal_cmdreq.h"
+#include "deal_userlog.h"
 
 static int INVALIDFD = -1;
 bool Server::s_exit = false;
@@ -97,6 +99,7 @@ void Server::PipeNotifyCB( evutil_socket_t fd, short events, void* arg )
 REQUEST_CB(DealBase);
 REQUEST_CB(DealAuth);
 REQUEST_CB(DealCmdReq);
+REQUEST_CB(DealUserlog);
 
 // public
 int Server::Run(int pidx)
@@ -110,20 +113,38 @@ int Server::Run(int pidx)
 
     // redis连接池初始化
     {
-        Redis* rds_conn = NULL;
         ret = RedisConnPoolAdmin::Instance()->LoadPoolFromFile(BmshConf::RedisPoolConfFile().c_str());
         ERRLOG_IF1(ret, "RUN| msg=load redispool fail| file=%s| ret=%d", BmshConf::RedisPoolConfFile().c_str(), ret);
         if (ret) goto run_end_tag;
+#if 0 // not check redis work
+        Redis* rds_conn = NULL;
         ret = RedisConnPoolAdmin::Instance()->GetConnect(rds_conn, BmshConf::RedisPoolName().c_str());
         ERRLOG_IF1(ret, "RUN| msg=connect redis fail| name=%s| ret=%d", BmshConf::RedisPoolName().c_str(), ret);
         if (ret) goto  run_end_tag;
         RedisConnPoolAdmin::Instance()->ReleaseConnect(rds_conn);
+#endif
+    }
+
+    // mongodb连接池初化
+    {
+        Mongo* mog_conn = NULL;
+        ret = MongoConnPoolAdmin::Instance()->LoadPoolFromFile("/etc/bmsh_mongo_connpoll_conf.json");
+        ERRLOG_IF1(ret, "RUN| msg=init mongopool fail| ret=%d", ret);
+        if (ret) goto  run_end_tag;
+        ret = MongoConnPoolAdmin::Instance()->GetConnect(mog_conn, BmshConf::MongoPoolName().c_str());
+        ERRLOG_IF1(ret, "RUN| msg=connect mongodb fail| name=%s| ret=%d", BmshConf::MongoPoolName().c_str(), ret);
+        if (ret) goto  run_end_tag;
+        MongoConnPoolAdmin::Instance()->ReleaseConnect(mog_conn);
     }
 
     // 业务处理类初始化
     {
         ret = DealBase::Init();
         ERRLOG_IF1(ret, "RUN| msg=DealBase.Init fail| ret=%d", ret);
+        if (ret) goto  run_end_tag;
+
+        ret = DealUserlog::Init();
+        ERRLOG_IF1(ret, "RUN| msg=DealUserlog.Init fail| ret=%d", ret);
         if (ret) goto  run_end_tag;
     }
 
@@ -156,6 +177,7 @@ int Server::Run(int pidx)
     }
 
 run_end_tag:
+    MongoConnPoolAdmin::Instance()->DestroyPool(NULL);
     RedisConnPoolAdmin::Instance()->DestroyPool(NULL);
     close(listenfd);
     listenfd = INVALIDFD;
@@ -187,6 +209,7 @@ int Server::Run(ThreadData& td)
 
         evhttp_set_cb(td.http, "/cloud/auth", USE_CB(DealAuth), &td);
         evhttp_set_cb(td.http, "/cloud/command", USE_CB(DealCmdReq), &td);
+        evhttp_set_cb(td.http, "/cloud/userlog", USE_CB(DealUserlog), &td);
         evhttp_set_gencb(td.http, USE_CB(DealBase), &td);
 
         LOGDEBUG("CREATESVR| thread-%d.base=%p", td.thidx, td.base);

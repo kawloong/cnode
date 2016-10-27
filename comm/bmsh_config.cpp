@@ -33,36 +33,39 @@ void UnInit( void )
     s_config.unload();
 }
 
-#define FUNC_STR_CONF_IMP(funname, szSec, szKey, defval)       \
-std::string funname(void)                                      \
-{                                                              \
-    std::string outval;                                        \
-    int result = s_config.read(szSec, szKey, outval);          \
-    if (result) return defval;                                 \
-    return outval;                                             \
+#define FUNC_STR_CONF_IMP(funname, szSec, szKey, defval)             \
+std::string funname(void)                                            \
+{                                                                    \
+    std::string outval;                                              \
+    int result = s_config.read(szSec, szKey, outval);                \
+    if (result) return defval;                                       \
+    return outval;                                                   \
 }
 
-#define FUNC_INT_CONF_IMP(funname, szSec, szKey, defval)      \
-int funname(void)                                             \
-{                                                             \
-    int outi;                                                 \
-    std::string outval;                                       \
-    int result = s_config.read(szSec, szKey, outval);         \
-    if (result) return defval;                                \
-    outi = atoi(outval.c_str());                              \
-    return outi;                                              \
+#define FUNC_INT_CONF_IMP(funname, szSec, szKey, defval)             \
+int funname(void)                                                    \
+{                                                                    \
+    int outi;                                                        \
+    std::string outval;                                              \
+    int result = s_config.read(szSec, szKey, outval);                \
+    if (result) return defval;                                       \
+    if (outval.length() > 1){                                        \
+    const char* p = outval.c_str();                                  \
+    sscanf(p, ('0'==p[0]?('x'==p[1]? "%x": "%o") : "%d"), &outi);}   \
+    else { outi = atoi(outval.c_str()); }                            \
+    return outi;                                                     \
 }
 
-#define FUNC_ARRSTR_CONF_IMP(funname, szSec, szKey, defval)   \
-static std::string funname(int idx, bool warnlog=false)       \
-{                                                             \
-    int result;                                               \
-    char outval;                                              \
-    char keystr[128];                                         \
-    snprintf(keystr, sizeof(keystr), "%s%d", szKey, idx);     \
-    result = s_config.read(szSec, keystr, outval);            \
-    if (result) return defval;                                \
-    return outval;                                            \
+#define FUNC_ARRSTR_CONF_IMP(funname, szSec, szKey, defval)          \
+static std::string funname(int idx, bool warnlog=false)              \
+{                                                                    \
+    int result;                                                      \
+    char outval;                                                     \
+    char keystr[128];                                                \
+    snprintf(keystr, sizeof(keystr), "%s%d", szKey, idx);            \
+    result = s_config.read(szSec, keystr, outval);                   \
+    if (result) return defval;                                       \
+    return outval;                                                   \
 }
 
 // 快捷配置读取定义
@@ -82,6 +85,12 @@ FUNC_STR_CONF_IMP(IcometIHost, "icomet", "host", "127.0.0.1")
 FUNC_INT_CONF_IMP(IcometAdminPort, "icomet", "admin_port", 8100)
 FUNC_INT_CONF_IMP(IcometFrontPort, "icomet", "front_port", 8000)
 FUNC_INT_CONF_IMP(IcometInterval, "icomet", "interval", 30)
+
+FUNC_INT_CONF_IMP(NodeHostID, "node", "hostid", -1);
+FUNC_INT_CONF_IMP(NodeIpcKEY, "node", "ipc_key", 0x5354);
+
+FUNC_STR_CONF_IMP(MongoPoolName, "common", "mongopool", "");
+
 FUNC_INT_CONF_IMP(TESTINI, "comm3", "ss", 234)
 
 }

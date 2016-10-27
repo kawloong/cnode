@@ -28,8 +28,8 @@ class DealBase
     const static int asyn_del_instance_time_sec = 4;
 
 public:
-    explicit DealBase(struct evhttp_request* req, ThreadData* tdata);
     virtual ~DealBase(void){}
+    explicit DealBase(struct evhttp_request* req, ThreadData* tdata);
 
     // 静态配置初始化
     static int Init(void);
@@ -45,6 +45,9 @@ protected:
 
     // 获取http-header值
     static int GetHeadStr(string& val, struct evhttp_request* req, const char* key);
+    // 获取客户端地址
+    static int GetRemoteAddr(string& addr, struct evhttp_request* req);
+
     // 获取http-uri中的查询串key/value
     static int FindQueryStrValue(string& val, const struct evhttp_request* req, const char* key);
     static int ParseQueryMap(map<string,string>& kvmap, const struct evhttp_request* req);
@@ -59,6 +62,7 @@ protected:
 
     // 异步删除自身this, 主要为避免易出错的递归删除
     void postDeleteMe(void);
+    static void ForceDelete(DealBase* deal);
 
     // 用于在任务线程切换回主event线程序, 方法立即返回,之后会解发resume()方法;
     int postResume( void );

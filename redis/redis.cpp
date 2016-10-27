@@ -60,7 +60,7 @@ int Redis::set(const char* key, const char* value)
         IFBREAK(ret);
         ERRLOG_IF1BRK(!(r->type == REDIS_REPLY_STATUS && strcasecmp(r->str,"OK") == 0), ERR_REPLY_TYPE,
             "REDIS_SET| msg=set %s %s fail| r.type=%d| r.str=%s", key, value, r->type, r->str);
-        LOGDEBUG("ok to execute set key=%s|value=%s",key, value);  
+        //LOGDEBUG("ok to execute set key=%s|value=%s",key, value);  
     }
     while (0);
 	
@@ -395,7 +395,11 @@ int Redis::hmset(const char* key, const char* strhash)
 
 Redis::~Redis()
 {
-	redisFree(pserver);
+    if (pserver)
+    {  
+        redisFree(pserver);
+        pserver = NULL;
+    }
 }
 
 int Redis::reconnect( void )
@@ -608,7 +612,7 @@ int Redis::del(const char* key)
         ERRLOG_IF0BRK(r->type==REDIS_REPLY_INTEGER , ERR_REPLY_TYPE,
             "REDIS_DEL| msg=%s fail| r.type=%d| r.str=%s", strcmd.c_str(), r->type, r->str);
 
-        LOGDEBUG("ok to execute hmset key=%s", strcmd.c_str());
+        //LOGDEBUG("ok to execute hmset key=%s", strcmd.c_str());
     }
     while (0);
 

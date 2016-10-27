@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "comm/public.h"
+#include "comm/strparse.h"
 #include "mongo/mongopooladmin.h"
 
 const char g_test_name[] = "cnode_pool";
@@ -20,30 +21,37 @@ int main(int argc, char* argv[])
     int ret = MongoConnPoolAdmin::Instance()->GetConnect(mgo1, g_test_name);
     if (0 == ret)
     {
-        string tmp;
-        string quer("{ }");
-        string field; //("{\"name\"}");
+        string tmp, tmp2;
+        string quer("{ \"$query\":{ \"kk11\": \"1234\"}, \"$orderby\":{ \"kk22\":-1 } }");
+        //string quer("{  \"kk1\": \"vv1\" }");
+        string field("{ \"_id\": 1, \"kk22\":1, \"kk11\":1 }");
 
         ret = MongoConnPoolAdmin::Instance()->GetConnect(mgo3, g_test_name); // test pool
         ret = MongoConnPoolAdmin::Instance()->GetConnect(mgo2, g_test_name); // test pool
 
-        {
-            if (0 == ret)
-            {
-                ret = mgo1->insert("{ \"kk11\": \"vv11\", \"kk22\": \"vv22\" } ", false);
-                LOGDEBUG("insert result=%d", ret);
-            }
-        }
+//         {
+//             if (0 == ret)
+//             {
+//                 ret = mgo1->insert("{ \"kk11\": \"1234\", \"kk22\": \"5678\" }", false);
+//                 LOGDEBUG("insert result=%d, err=%s", ret, mgo1->geterr().c_str());
+//             }
+//         }
 
         MongoConnPoolAdmin::Instance()->showPoolStatus(g_test_name);
 
-		ret = mgo1->find(tmp, quer, field, 2, 0);
+		ret = mgo1->find(tmp, quer, field, 1, 0);
         LOGDEBUG("result set:%s\n", tmp.c_str());
+        if (!tmp.empty())
+        {
+            StrParse::PickOneJson(tmp2, tmp, "kk11");
+            printf("PickOneJson -> %s\n", tmp2.c_str());
+        }
         LOGDEBUG("mgo1->find result %d, err=%s", ret, mgo1->geterr().c_str());
 
-        tmp = "{ \"$set\": { \"name\": \"xx\" } }";
+        tmp = "{ \"$set\": { \"xxml\": \"989898989\" } }";
 
-        ret = mgo1->update(quer, tmp, false, false);
+        // "{\"kk11\":\"1234\", }"
+        ret = mgo1->update("{ \"xxml\":{ \"$exist\": true} }", tmp, false, false);
         LOGDEBUG("update ret=%d| err=%s", ret, mgo1->geterr().c_str());
 
 

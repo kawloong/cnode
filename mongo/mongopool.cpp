@@ -23,7 +23,7 @@ int MongoConnPool::init(mongo_pool_conf_t* conf)
 		if (NULL == conf || conf->mongo_uri.empty() ||
             conf->initConnNum > conf->processMaxConnNum || conf->initConnNum < 0)
 		{
-			ret = ERR_PARAM_INPUT;
+			ret = EMOG_PARAM_INPUT;
 			break;
 		}
 		
@@ -48,14 +48,14 @@ int MongoConnPool::init(mongo_pool_conf_t* conf)
             Mongo* mog = NULL;
             int ret_get = getConnect(mog, false);
 
-            ERRLOG_IF1BRK(ret_get, ERR_INIT_FAIL,
+            ERRLOG_IF1BRK(ret_get, EMOG_INIT_FAIL,
                 "MONGOPOOLINIT| msg=init connect fail| poolname=%s| ret=%d",
                 conf->poolname.c_str(), ret_get);
 
             {
                 string errmsg;
                 int ret_ping = mog->ping(&errmsg);
-                ERRLOG_IF1BRK(ret_ping, ERR_INIT_FAIL, "MONGOPOOLINIT| msg=ping fail| err=%s| poolname=%s",
+                ERRLOG_IF1BRK(ret_ping, EMOG_INIT_FAIL, "MONGOPOOLINIT| msg=ping fail| err=%s| poolname=%s",
                     errmsg.c_str(), conf->poolname.c_str());
                 relConnect(mog);
             }

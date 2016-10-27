@@ -45,7 +45,7 @@ int DealBase::Init( void )
 // 业务处理完成后调用, 交由异步机制删除
 void DealBase::postDeleteMe(void)
 {
-    m_tdata->removeDeal(this);
+    m_tdata->removeDeal(this, true);
 
     WARNLOG_IF1(pthread_self() != m_tdata->threadid,
         "POSTDELME| msg=ex-thread call timer| tidx=%d",
@@ -66,6 +66,16 @@ void DealBase::postDeleteMe(void)
     m_tdata = NULL;
 }
 
+// 同步, 直接在调用线程上delete deal
+void DealBase::ForceDelete( DealBase* deal )
+{
+    if (deal)
+    {
+        deal->m_tdata->removeDeal(deal, false);
+        delete deal;
+    }
+}
+
 // 异步回收
 void DealBase::AsynDelTimerCB(evutil_socket_t, short, void* arg)
 {
@@ -82,7 +92,7 @@ void DealBase::AsynDelTimerCB(evutil_socket_t, short, void* arg)
     }
 }
 
-// for example
+// for example, only debug use
 int DealBase::Run( struct evhttp_request* req, ThreadData* tdata )
 {
     int ret;
@@ -261,6 +271,28 @@ int DealBase::SendRespondFail( struct evhttp_request* req, const string& reson, 
     }
 
     evhttp_send_reply(req, 200, "OK", NULL);
+    return ret;
+}
+
+// static
+// 相当于FCGX_GetParam("REMOTE_ADDR", request->envp);
+int DealBase::GetRemoteAddr( string& addr, struct evhttp_request* req )
+{
+    int ret = -1;
+
+    struct evhttp_connection* conn = evhttp_request_get_connection(req);
+    if (conn)
+    {
+        char* pstr = NULL;
+        uint16_t port;
+        evhttp_connection_get_peer(conn, &pstr, &port);
+        if (pstr)
+        {
+            addr = pstr;
+            ret = 0;
+        }
+    }
+
     return ret;
 }
 

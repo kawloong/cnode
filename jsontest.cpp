@@ -5,7 +5,8 @@
 using namespace rapidjson;
 
 const char json[] = 
-" { \"hello\" : \"world\", \"xx\":[\"a\", \"b\"], \"t\" : true , \"f\" : false, \"n\": null, \"i\":123, \"pi\": 3.1416, \"a\":[1, 2, 3, 4] }";
+//" { \"hello\" : \"world\", \"xx\":[\"a\", \"b\"], \"t\" : true , \"f\" : false, \"n\": null, \"i\":123, \"pi\": 3.1416, \"a\":[1, 2, 3, 4] }";
+"{\"module\":\"wifidog_wifi\",\"data\":{\"time_sec\":\"1477294357\",\"time_usec\":\"408492\",\"mac\":\"d4:22:3f:63:ff:6b\",\"status\":0}}";
 
 
 int main(int, char*[])
@@ -17,13 +18,12 @@ int main(int, char*[])
     memcpy(buffer, json, sizeof(json));
     if (document.ParseInsitu(buffer).HasParseError())return 1;
 
-	printf("\nParsing to document succeeded.\n");
+	printf("\nParsing to document succeeded. size=%u\n", sizeof(json));
 	printf("t = %d\n", document["t"].GetBool());
 	printf("gettype=%d\n", document["t"].GetType());
 	
 	Value& xx = document["xx"];
 	const Value& aa = document["a"];
-	xx = aa[2];
 	
 	Value cpa(document["a"], document.GetAllocator());
 	cpa.PushBack("999", document.GetAllocator());

@@ -24,6 +24,13 @@ Server--| -- thread2(ThreadData) --|-- httpclient
 ** Server:s_exit 收到退出信号后即置位, 不再接受新connect请求;
 ** ThreadData::exitfg 是通知libevent处理线程退出标记,避免通知多次
 */
+
+/* 增加http某类型请求步骤:
+** 1.定义处理类,让其继承于DealBase
+** 2.在server.cpp头增加include处理类头
+** 3.在server.cpp实现中定义REQUEST_CB(处理类名)
+** 4.在Server::Run()添加evhttp_set_cb(td.http, "请求path", USE_CB(处理类名), &td);
+*/
  
 class Server
 {

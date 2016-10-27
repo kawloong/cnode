@@ -14,8 +14,14 @@ enum
     ERR_ENCODING,
     ERR_JSON_FORMAT,
     ERR_SYSTEM,
+    ERR_UNDEFINE,
     ERR_MD5INVALID, // MD5不合法
     ERR_REDIS,
+    ERR_MONGO,
+    ERR_MONGO_INSERT,
+    ERR_MONGO_UPDATE,
+    ERR_MONGO_FIND,
+    ERR_MONGO_NOLOGIN, // 缺少上线登录日志
 
     ERR_SYSBUG, // 存在程序逻辑错误
 };

@@ -56,6 +56,11 @@ namespace BmshConf
     FUNC_INT_CONF(IcometFrontPort);
     FUNC_INT_CONF(IcometInterval);
 
+    FUNC_INT_CONF(NodeHostID);
+    FUNC_INT_CONF(NodeIpcKEY);
+
+    FUNC_STR_CONF(MongoPoolName);
+
     FUNC_INT_CONF(TESTINI);
 
 };

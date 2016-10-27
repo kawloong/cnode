@@ -1,6 +1,6 @@
 SubComCpp=
 SrcCpp:=main.cpp server.cpp httpclient.cpp threaddata.cpp dealbase.cpp\
-deal_auth.cpp deal_cmdreq.cpp deal_cmdresp.cpp\
+deal_auth.cpp deal_cmdreq.cpp deal_cmdresp.cpp deal_userlog.cpp idmanage.cpp\
 comm/strparse.cpp comm/log.cpp comm/config.cpp comm/bmsh_config.cpp comm/lock.cpp\
 comm/taskpool.cpp comm/file.cpp comm/sock.cpp comm/base64.cpp comm/md5.cpp\
 tinyxml/bmshxml.cpp\
@@ -45,8 +45,10 @@ $(TARGET): $(OBJ)
 	@echo >> $(MKLLOGFILE)
 	
 
-#test code
+#test code # 增加测试程度像如下test1样式添加
 test1:  $(patsubst main.o,test1.o,$(OBJ))
+	$(CXX) $(LDFLAGS) $^ $(ALIBS) -o $@ $(LOADLIBES) $(LDLIBS)
+test2:  $(patsubst main.o,test2.o,$(OBJ))
 	$(CXX) $(LDFLAGS) $^ $(ALIBS) -o $@ $(LOADLIBES) $(LDLIBS)
 
 # ---------------------------------------- #

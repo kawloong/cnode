@@ -16,14 +16,14 @@ issue help for libmongoc.so http://mongoc.org/libmongoc/1.4.0/
 // MongoPool所有调用的错误返回值定义
 enum _mongo_err_
 {
-    ERR_INNER_SYS = 300, // 内部错误
-    ERR_PARAM_INPUT,
-    ERR_LOADCONF,
-    ERR_INIT_FAIL,
-    ERR_DUP_INIT,
-    ERR_INVALID_NAME,
-    ERR_OP_FAIL,
-    ERR_JSON_FORMAT,
+    EMOG_INNER_SYS = 300, // 内部错误
+    EMOG_PARAM_INPUT,
+    EMOG_LOADCONF,
+    EMOG_INIT_FAIL,
+    EMOG_DUP_INIT,
+    EMOG_INVALID_NAME,
+    EMOG_OP_FAIL,
+    EMOG_JSON_FORMAT,
 };
 
 // 封装mongodb的增删改查的相关操作

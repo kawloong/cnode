@@ -72,7 +72,8 @@ else{}}
             ret = TaskPool::Instance()->addTask(deal); // 调用addTask(d)后,下次异步进入d->run_task();
             if (ret)
             {
-                delete deal;
+                ForceDelete(deal);
+                deal = NULL;
                 err_reason = "system error";
                 break;
             }

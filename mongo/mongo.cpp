@@ -51,7 +51,7 @@ int Mongo::insert( bson_t* bson, bool save )
     if (!result)
     {
         m_operror = berr.message;
-        ret = ERR_OP_FAIL;
+        ret = EMOG_OP_FAIL;
     }
 
     return ret;
@@ -69,7 +69,7 @@ int Mongo::insert( const string& json, bool save )
     }
 
     DESTROY_BSON_PTR(bson);
-    return ERR_JSON_FORMAT;
+    return ret;
 }
 
 int Mongo::find( string& rs, const string& queryjson, const string& fieldjson, int limit, int skip )
@@ -108,7 +108,7 @@ int Mongo::find( list<string>& vrs, const string& queryjson, const string& field
         if (NULL == qbson)
         {
             m_operror = "query null";
-            ret = ERR_PARAM_INPUT;
+            ret = EMOG_PARAM_INPUT;
             break;
         }
 
@@ -134,7 +134,7 @@ int Mongo::find( list<string>& vrs, const bson_t* query, const bson_t* field, in
 
     if (NULL == query)
     {
-        return ERR_PARAM_INPUT;
+        return EMOG_PARAM_INPUT;
     }
 
     cursor = mongoc_collection_find(m_coll, MONGOC_QUERY_NONE, skip, limit, 0, query, field, NULL);
@@ -153,7 +153,7 @@ int Mongo::find( list<string>& vrs, const bson_t* query, const bson_t* field, in
     if (mongoc_cursor_error(cursor, &error))
     {
         m_operror = error.message;
-        ret = ERR_OP_FAIL;
+        ret = EMOG_OP_FAIL;
     }
 
     mongoc_cursor_destroy(cursor);
@@ -170,7 +170,7 @@ int Mongo::update( const string& queryjson, const string& setjson, bool upsert, 
     {
         if (queryjson.empty() || setjson.empty())
         {
-            ret = ERR_PARAM_INPUT;
+            ret = EMOG_PARAM_INPUT;
             break;
         }
 
@@ -179,7 +179,7 @@ int Mongo::update( const string& queryjson, const string& setjson, bool upsert, 
         if (NULL == bquery)
         {
             m_operror = "query param null";
-            ret = ERR_PARAM_INPUT;
+            ret = EMOG_PARAM_INPUT;
             break;
         }
 
@@ -188,7 +188,7 @@ int Mongo::update( const string& queryjson, const string& setjson, bool upsert, 
         if (NULL == bset)
         {
             m_operror = "set param null";
-            ret = ERR_PARAM_INPUT;
+            ret = EMOG_PARAM_INPUT;
             break;
         }
 
@@ -208,7 +208,7 @@ int Mongo::update( const bson_t* bquery, const bson_t* bset, bool upsert, bool m
 
     if (NULL == bquery)
     {
-        ret = ERR_PARAM_INPUT;
+        ret = EMOG_PARAM_INPUT;
         m_operror = "query param null";
     }
     else
@@ -227,7 +227,7 @@ int Mongo::update( const bson_t* bquery, const bson_t* bset, bool upsert, bool m
         if (!mongoc_collection_update(m_coll, mongoc_update_flags_t(flag), bquery, bset, NULL, &error))
         {
             m_operror = error.message;
-            ret = ERR_OP_FAIL;
+            ret = EMOG_OP_FAIL;
         }
     }
 
@@ -255,7 +255,7 @@ int Mongo::remove( const bson_t* bquery, bool onlyone )
 
     if (NULL == bquery)
     {
-        ret = ERR_PARAM_INPUT;
+        ret = EMOG_PARAM_INPUT;
         m_operror = "query param null";
     }
     else
@@ -271,7 +271,7 @@ int Mongo::remove( const bson_t* bquery, bool onlyone )
         if (!mongoc_collection_remove(m_coll, mongoc_remove_flags_t(flag), bquery, NULL, &error))
         {
             m_operror = error.message;
-            ret = ERR_OP_FAIL;
+            ret = EMOG_OP_FAIL;
         }
     }
 
@@ -320,7 +320,7 @@ int Mongo::findAndModify( string& rs, const bson_t* bquery, const bson_t* sort, 
 
     if (NULL == bquery)
     {
-        ret = ERR_PARAM_INPUT;
+        ret = EMOG_PARAM_INPUT;
         m_operror = "query param null";
     }
     else
@@ -328,7 +328,7 @@ int Mongo::findAndModify( string& rs, const bson_t* bquery, const bson_t* sort, 
         if (!mongoc_collection_find_and_modify(m_coll, bquery, sort, update, field, rm, upsert, bnew, &reply, &berr))
         {
             m_operror = berr.message;
-            ret = ERR_OP_FAIL;
+            ret = EMOG_OP_FAIL;
         }
         else
         {
@@ -361,7 +361,7 @@ int Mongo::json2bson( bson_t** bson, const string& strjson )
         if (NULL == bson)
         {
             m_operror = berr.message;
-            ret = ERR_JSON_FORMAT;
+            ret = EMOG_JSON_FORMAT;
         }
     }
     else

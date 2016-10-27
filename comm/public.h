@@ -56,6 +56,14 @@ Cls(){}                                                       \
 Cls(const Cls&);                                              \
 Cls& operator=(const Cls&);    
 
+// singleton, need define constructor&destructor
+#define SINGLETON_CLASS2(Cls)                                 \
+public:                                                       \
+static Cls* Instance(void){ static Cls s; return &s; }        \
+private:                                                      \
+Cls(const Cls&);                                              \
+Cls& operator=(const Cls&);    
+
 
 
 #endif

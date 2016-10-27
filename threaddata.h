@@ -41,7 +41,7 @@ struct ThreadData
     void pushDeal(DealBase* ptr);
     void delDealer(void);
     void delAllDealer(void);
-    bool removeDeal(DealBase* ptr);
+    bool removeDeal(DealBase* ptr, bool add2rm);
 
     void pushResume(DealBase* ptr);
     DealBase* popResume(void);

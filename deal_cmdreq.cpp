@@ -73,7 +73,7 @@ int DealCmdReq::Run( struct evhttp_request* req, ThreadData* tdata )
     if (ret) // 参数不合法的响应
     {
         ret = SendRespondFail(req, err_reason, ret);
-        IFDELETE(deal);
+        ForceDelete(deal);
     }
 
     IFFREE(bodydata);

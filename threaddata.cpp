@@ -84,10 +84,15 @@ void ThreadData::delAllDealer( void )
     }
 }
 
-bool ThreadData::removeDeal( DealBase* ptr )
+bool ThreadData::removeDeal( DealBase* ptr, bool add2rm )
 {
     dealing.erase(ptr);
-    rmdeal.push_back(ptr);
+
+    if (add2rm)
+    {
+        rmdeal.push_back(ptr);
+    }
+
     return true;
 }
 

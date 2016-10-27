@@ -58,16 +58,16 @@ int MongoConnPoolAdmin::LoadPoolFromFile( const char* conffile )
 
     do
     {
-        IFBREAK_N(NULL == conffile || 0 == conffile[0], ERR_PARAM_INPUT);
+        IFBREAK_N(NULL == conffile || 0 == conffile[0], EMOG_PARAM_INPUT);
         ifstream ifs(conffile);
         stringstream ss;
         ss << ifs.rdbuf();
         string strjson(ss.str());
 
         ret = doc.ParseInsitu((char*)strjson.c_str()).GetParseError();
-        ERRLOG_IF1BRK(ret, ERR_LOADCONF, "MONGOPOOLCONF| msg=load confiure file fail| ret=%d| file=%s",
+        ERRLOG_IF1BRK(ret, EMOG_LOADCONF, "MONGOPOOLCONF| msg=load confiure file fail| ret=%d| file=%s",
             ret, conffile);
-        IFBREAK_N(!doc.IsObject(), ERR_PARAM_INPUT);
+        IFBREAK_N(!doc.IsObject(), EMOG_PARAM_INPUT);
 
         Value::MemberIterator cit = doc.MemberBegin();
         for (; cit != doc.MemberEnd(); ++cit)
@@ -158,10 +158,10 @@ int MongoConnPoolAdmin::RegisterPool(mongo_pool_conf_t* conf)
 	int ret = 0;
 	
 	BREAK_CTRL_BEGIN
-	BREAKNIF1(NULL == conf, ERR_PARAM_INPUT);
+	BREAKNIF1(NULL == conf, EMOG_PARAM_INPUT);
     {
         RWLOCK_READ(m_lock); // ¶Á²Ù×÷Ëø
-	    BREAKNIF1(m_conn_pools.find(conf->poolname) != m_conn_pools.end(), ERR_DUP_INIT);
+	    BREAKNIF1(m_conn_pools.find(conf->poolname) != m_conn_pools.end(), EMOG_DUP_INIT);
     }
 
 	
@@ -254,7 +254,7 @@ int MongoConnPoolAdmin::GetConnect(Mongo*& pmongo, const char* poolname)
 	else
 	{
 		// log unexcept poolname or unregister poolname
-		ret = ERR_INVALID_NAME;
+		ret = EMOG_INVALID_NAME;
         map<string, mongo_pool_conf_t*>::iterator it = m_all_conf.find(poolname);
         if (it != m_all_conf.end())
         {

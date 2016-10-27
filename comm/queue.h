@@ -98,8 +98,8 @@ public:
                 {
                     struct timeval now;
                     gettimeofday(&now, NULL);
-                    printf("Wait cond %ld sec %ld ns | now=%ld.%ld\n", // debug
-                        abstime.tv_sec, abstime.tv_nsec, now.tv_sec, now.tv_usec);
+//                     printf("Wait cond %ld sec %ld ns | now=%ld.%ld\n", // debug
+//                         abstime.tv_sec, abstime.tv_nsec, now.tv_sec, now.tv_usec);
                 }
                 pthread_cond_timedwait(&m_cond, &m_mutex, &abstime);
 
